@@ -9,8 +9,8 @@ A RAG-based chatbot that helps players query information about Genshin Impact us
 **Current Phase:** Data Collection & Setup
 
 - [x] Project initialization
-- [ ] Wiki data crawler
-- [ ] Data preprocessing
+- [x] Wiki data crawler
+- [x] Data preprocessing
 - [ ] RAG pipeline
 - [ ] Gradio interface
 - [ ] Deployment
