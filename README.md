@@ -11,7 +11,7 @@ A RAG-based chatbot that helps players query information about Genshin Impact us
 - [x] Project initialization
 - [x] Wiki data crawler
 - [x] Data preprocessing
-- [ ] Embeddings & ChromaDB
+- [x] Embeddings & ChromaDB
 - [ ] Setup LLM provider
 - [ ] Build RAG chain
 - [ ] Gradio interface

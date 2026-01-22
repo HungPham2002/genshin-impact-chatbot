@@ -5,9 +5,9 @@ Uses SentenceTransformers for text embeddings
 
 import json
 from typing import List, Dict, Tuple
+from tqdm import tqdm
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
 import numpy as np
 
 
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     embedder = GenshinEmbedder(model_name="all-MiniLM-L6-v2")
 
     # Process chunks file
-    chunks_file = Path("data/processed/characters_chunks_v2.json")
+    chunks_file = Path("data/processed/characters_chunks_v3.json")
     texts, embeddings, metadatas = embedder.process_chunks_file(chunks_file)
 
     # Show sample
