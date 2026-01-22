@@ -4,11 +4,10 @@ Persistent local vector database for efficient similarity search
 """
 
 import chromadb
-from chromadb.config import Settings
-from typing import List, Dict, Optional
 import numpy as np
 from pathlib import Path
-
+from chromadb.config import Settings
+from typing import List, Dict, Optional
 
 class GenshinVectorStore:
     """Vector store using ChromaDB for character information retrieval"""
@@ -35,7 +34,7 @@ class GenshinVectorStore:
         persist_directory.mkdir(parents=True, exist_ok=True)
 
         # Initialize ChromaDB client with persistence
-        print(f"🗄️  Initializing ChromaDB at: {persist_directory}")
+        print(f"Initializing ChromaDB at: {persist_directory}")
         self.client = chromadb.PersistentClient(
             path=str(persist_directory),
             settings=Settings(
@@ -46,7 +45,16 @@ class GenshinVectorStore:
 
         # Get or create collection
         self.collection = self._get_or_create_collection()
-        print(f"✅ Collection '{collection_name}' ready!")
+        print(f"Collection '{collection_name}' ready!")
+
+    def _sanitize_metadata(self, metadata: Dict) -> Dict:
+        """
+        Remove None values from metadata (ChromaDB requirement)
+        """
+        return {
+            k: v for k, v in metadata.items()
+            if v is not None
+        }
 
     def _get_or_create_collection(self):
         """Get existing collection or create new one"""
@@ -55,10 +63,10 @@ class GenshinVectorStore:
                 name=self.collection_name
             )
             count = collection.count()
-            print(f"📚 Found existing collection with {count} documents")
+            print(f"Found existing collection with {count} documents")
             return collection
         except:
-            print(f"📝 Creating new collection:  {self.collection_name}")
+            print(f"Creating new collection:  {self.collection_name}")
             return self.client.create_collection(
                 name=self.collection_name,
                 metadata={"hnsw:space": "cosine"}  # Cosine similarity
@@ -89,24 +97,34 @@ class GenshinVectorStore:
         # Convert embeddings to list
         embeddings_list = embeddings.tolist()
 
-        print(f"📥 Adding {n_docs} documents to vector store...")
+        print(f"Adding {n_docs} documents to vector store...")
 
         # Add in batches to avoid memory issues
         batch_size = 100
         for i in range(0, n_docs, batch_size):
             end_idx = min(i + batch_size, n_docs)
 
+            # for idx, m in enumerate(metadatas):
+            #     for k, v in m.items():
+            #         if v is None:
+            #             print(f"[WARN] Metadata None at doc {idx}, key='{k}'")
+
+            # Sanitize None
+            sanitized_metadatas = [
+                self._sanitize_metadata(m)
+                for m in metadatas[i:end_idx]
+            ]
+
             self.collection.add(
                 ids=ids[i:end_idx],
                 embeddings=embeddings_list[i:end_idx],
                 documents=texts[i:end_idx],
-                metadatas=metadatas[i:end_idx]
+                metadatas=sanitized_metadatas
             )
-
             print(f"  Added batch {i // batch_size + 1}:  {i}-{end_idx}")
 
-        print(f"✅ Successfully added {n_docs} documents!")
-        print(f"📊 Total documents in collection: {self.collection.count()}")
+        print(f"Successfully added {n_docs} documents!")
+        print(f"Total documents in collection: {self.collection.count()}")
 
     def similarity_search(
             self,
@@ -167,10 +185,10 @@ class GenshinVectorStore:
 
     def reset_collection(self):
         """Delete and recreate collection (use with caution!)"""
-        print(f"⚠️  Resetting collection:  {self.collection_name}")
+        print(f"Resetting collection:  {self.collection_name}")
         self.client.delete_collection(name=self.collection_name)
         self.collection = self._get_or_create_collection()
-        print(f"✅ Collection reset complete!")
+        print(f"Collection reset complete!")
 
     def as_retriever(self, k: int = 3):
         """
@@ -227,7 +245,7 @@ if __name__ == "__main__":
     print("STEP 4: Vector Store Statistics")
     print("=" * 60)
     stats = vector_store.get_stats()
-    print(f"📊 Statistics:")
+    print(f"Statistics:")
     for key, value in stats.items():
         print(f"  - {key}: {value}")
 
@@ -235,13 +253,13 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("STEP 5: Test Similarity Search")
     print("=" * 60)
-    query = "Who is Diluc?"
+    query = "Who is Klee?"
     query_embedding = embedder.model.encode(query)
 
     results = vector_store.similarity_search(query_embedding, k=3)
 
-    print(f"\n🔍 Query: '{query}'")
-    print(f"📄 Top 3 Results:")
+    print(f"\nQuery: '{query}'")
+    print(f"Top 3 Results:")
     for i, (doc, metadata, distance) in enumerate(zip(
             results['documents'],
             results['metadatas'],
@@ -250,4 +268,4 @@ if __name__ == "__main__":
         print(f"\n  Result {i}:")
         print(f"    Character: {metadata.get('character', 'N/A')}")
         print(f"    Distance: {distance:.4f}")
-        print(f"    Content: {doc[: 150]}...")
+        print(f"    Content: {doc[: 500]}...")

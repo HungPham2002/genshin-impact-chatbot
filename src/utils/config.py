@@ -2,9 +2,9 @@
 Configuration management for Genshin Impact Chatbot
 """
 
-import os
 from pathlib import Path
 from dotenv import load_dotenv
+import os
 
 # Load environment variables
 load_dotenv()
@@ -21,7 +21,7 @@ class Config:
     CHROMA_DB_DIR = PROJECT_ROOT / "chroma_db"
 
     # Data files
-    CHUNKS_FILE = PROCESSED_DATA_DIR / "characters_chunks_v2.json"
+    CHUNKS_FILE = PROCESSED_DATA_DIR / "characters_chunks_v3.json"
 
     # API Keys
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -60,7 +60,7 @@ class Config:
         # Create directories if not exist
         cls.CHROMA_DB_DIR.mkdir(exist_ok=True, parents=True)
 
-        print("✅ Configuration validated successfully!")
+        print("Configuration validated successfully!")
         return True
 
 
