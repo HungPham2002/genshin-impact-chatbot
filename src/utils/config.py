@@ -36,9 +36,10 @@ class Config:
 
     # LLM settings
     LLM_PROVIDER = "gemini"
-    GEMINI_MODEL = "gemini-1.5-flash"
+    GEMINI_MODEL = "gemini-2.5-flash"
     LLM_TEMPERATURE = 0.7
     LLM_MAX_TOKENS = 512
+
 
     # RAG settings
     RETRIEVAL_TOP_K = 3  # Number of chunks to retrieve

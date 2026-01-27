@@ -1,5 +1,5 @@
 """
-Test script for Phase 1:  Embeddings & Vector Store
+Test script:  Emb8eddings & Vector Store
 """
 
 import sys
@@ -15,7 +15,7 @@ from src.vector_store.chroma_store import GenshinVectorStore
 
 def main():
     print("=" * 70)
-    print("GENSHIN IMPACT CHATBOT - PHASE 1 TEST")
+    print("GENSHIN IMPACT CHATBOT - TEST EMBEDDING RETRIEVAL")
     print("=" * 70)
 
     # Step 1: Validate configuration
@@ -61,15 +61,11 @@ def main():
             print(f"  [{i}] {metadata.get('character', 'Unknown')}: {doc[:100]}...")
 
     # Final stats
-    print("\n" + "=" * 70)
-    print("PHASE 1 COMPLETE!")
-    print("=" * 70)
     stats = vector_store.get_stats()
     print(f"Final Statistics:")
     for key, value in stats.items():
         print(f"  - {key}: {value}")
 
-    print("\nPhase 1 testing successful!  Ready for Phase 2!")
 
 
 if __name__ == "__main__":

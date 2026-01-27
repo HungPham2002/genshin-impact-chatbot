@@ -64,7 +64,7 @@ class EnhancedGenshinProcessor:
         # Remove special unicode characters
         text = text.replace('ⓘ', '')
         text = text.replace('‍', '')
-        text = text. replace('­', '')  # soft hyphen
+        text = text.replace('­', '')  # soft hyphen
 
         # Fix stuck words - add space before capitals after lowercase
         text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
@@ -81,13 +81,13 @@ class EnhancedGenshinProcessor:
         ]
 
         for pattern, replacement in stuck_patterns:
-            text = re. sub(pattern, replacement, text)
+            text = re.sub(pattern, replacement, text)
 
         # Clean up whitespace
         text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'\s+([.,!?])', r'\1', text)
 
-        return text. strip()
+        return text.strip()
 
     def extract_character_roles(self, intro: str) -> Dict[str, bool]:
         """Extract character roles (On-Field, Off-Field, DPS, Support, Survivability)"""
@@ -148,9 +148,9 @@ class EnhancedGenshinProcessor:
         ]
 
         for pattern in patterns:
-            match = re. search(pattern, intro)
+            match = re.search(pattern, intro)
             if match:
-                return match. group(1).strip()
+                return match.group(1).strip()
 
         return None
 
@@ -171,7 +171,7 @@ class EnhancedGenshinProcessor:
             if match:
                 actor = match.group(1).strip()
                 # Clean up the actor name
-                actor = re. sub(r'\s*\([^)]*\)\s*', '', actor)
+                actor = re.sub(r'\s*\([^)]*\)\s*', '', actor)
                 actor = re.sub(r'\[\d+\]', '', actor)
                 if actor and len(actor) > 1 and len(actor) < 50:
                     voice_actors[lang] = actor
@@ -201,7 +201,7 @@ class EnhancedGenshinProcessor:
         ]
 
         for pattern in patterns:
-            match = re. search(pattern, intro, re.IGNORECASE)
+            match = re.search(pattern, intro, re.IGNORECASE)
             if match:
                 return int(match.group(1))
 
@@ -215,7 +215,7 @@ class EnhancedGenshinProcessor:
         ]
 
         for pattern in patterns:
-            match = re. search(pattern, intro)
+            match = re.search(pattern, intro)
             if match:
                 dish = match.group(1).strip()
                 # Clean up
@@ -250,7 +250,7 @@ class EnhancedGenshinProcessor:
         ]
 
         for pattern in patterns:
-            match = re. search(pattern, intro)
+            match = re.search(pattern, intro)
             if match:
                 name = match.group(1).strip()
                 if name and len(name) > 2:
@@ -485,7 +485,7 @@ class EnhancedGenshinProcessor:
         # Check for 5-star indicators in text
         five_star_indicators = ['5★', '5-Star', '5 Star', 'Quality5', '★★★★★']
         for indicator in five_star_indicators:
-            if indicator. lower() in intro.lower():
+            if indicator.lower() in intro.lower():
                 return 5
 
         # Default to 4-star for playable characters
@@ -570,12 +570,12 @@ class EnhancedGenshinProcessor:
                                            ['Pyro', 'Hydro', 'Electro', 'Cryo', 'Anemo', 'Geo', 'Dendro']),
             'weapon': self._extract_field(intro,
                                           ['Sword', 'Claymore', 'Polearm', 'Bow', 'Catalyst']),
-            'rarity': self. extract_rarity(name, intro),
+            'rarity': self.extract_rarity(name, intro),
             'region': self._extract_field(intro,
                                           ['Mondstadt', 'Liyue', 'Inazuma', 'Sumeru', 'Fontaine',
                                            'Natlan', 'Snezhnaya', "Khaenri'ah", 'Nod-Krai']),
             'model_type': self._extract_model_type(intro),
-            'title': self. extract_title(intro),
+            'title': self.extract_title(intro),
             'affiliations': self.extract_affiliation(intro),
             'constellation':  self.extract_constellation(intro),
         }
@@ -595,13 +595,13 @@ class EnhancedGenshinProcessor:
         info['voice_actors'] = self.extract_voice_actors(intro)
 
         # NEW: Extract character type (biological/synthetic/adoptive)
-        info['character_type'] = self. extract_character_type(intro)
+        info['character_type'] = self.extract_character_type(intro)
 
         # NEW: Extract event wishes count
         info['event_wishes_count'] = self.extract_event_wishes(intro)
 
         # NEW: Extract special dish
-        info['special_dish'] = self. extract_special_dish(intro)
+        info['special_dish'] = self.extract_special_dish(intro)
 
         # NEW: Extract namecard
         info['namecard'] = self.extract_namecard(intro)
@@ -626,7 +626,7 @@ class EnhancedGenshinProcessor:
         # Clean sections
         sections = raw_data.get('sections', {})
         info['sections'] = {
-            self._clean_section_name(k): self. clean_text(v)
+            self._clean_section_name(k): self.clean_text(v)
             for k, v in sections.items()
             if v and len(v) > 20
         }
@@ -656,7 +656,7 @@ class EnhancedGenshinProcessor:
     def _extract_field(self, text: str, options: List[str]) -> Optional[str]:
         """Extract a field value from text"""
         for option in options:
-            if option. lower() in text.lower():
+            if option.lower() in text.lower():
                 return option
         return None
 
@@ -668,7 +668,7 @@ class EnhancedGenshinProcessor:
             'Short Male', 'Short Female'
         ]
         for model in model_types:
-            if model. lower().replace(' ', '') in text.lower().replace(' ', ''):
+            if model.lower().replace(' ', '') in text.lower().replace(' ', ''):
                 return model
         return None
 
@@ -685,7 +685,7 @@ class EnhancedGenshinProcessor:
         # Character name as header
         parts.append(f"# {info['name']}")
 
-        if info. get('title'):
+        if info.get('title'):
             parts.append(f"Also known as: {info['title']}")
 
         if info.get('real_name') and info.get('real_name') != info['name']:
@@ -746,7 +746,7 @@ class EnhancedGenshinProcessor:
         if info.get('voice_actors'):
             parts.append("## Voice Actors")
             for lang, actor in info['voice_actors'].items():
-                parts.append(f"- {lang. capitalize()}: {actor}")
+                parts.append(f"- {lang.capitalize()}: {actor}")
             parts.append("")
 
         # NEW: Special dish
@@ -795,7 +795,7 @@ class EnhancedGenshinProcessor:
 
         for char in raw_data:
             try:
-                processed_char = self. process_character(char)
+                processed_char = self.process_character(char)
                 processed.append(processed_char)
             except Exception as e:
                 char_name = char.get('name', 'Unknown')
@@ -820,7 +820,7 @@ class EnhancedGenshinProcessor:
 
 ## Basic Information
 - Element: {char.get('element', 'Unknown')}
-- Weapon: {char. get('weapon', 'Unknown')}
+- Weapon: {char.get('weapon', 'Unknown')}
 - Rarity: {char.get('rarity', 4)}-Star
 - Region: {char.get('region', 'Unknown')}
 - Role: {char.get('role_summary', 'Unknown')}
@@ -833,16 +833,16 @@ class EnhancedGenshinProcessor:
                 basic_info += f"- Release Date: {char['release_date']}\n"
 
             chunks.append({
-                'id': f"{name. lower().replace(' ', '_')}_basic",
+                'id': f"{name.lower().replace(' ', '_')}_basic",
                 'character': name,
                 'chunk_type': 'basic_info',
-                'content': basic_info. strip(),
+                'content': basic_info.strip(),
                 'metadata': {
                     'element': char.get('element'),
-                    'weapon': char. get('weapon'),
+                    'weapon': char.get('weapon'),
                     'rarity': char.get('rarity'),
                     'region':  char.get('region'),
-                    'role_summary': char. get('role_summary'),
+                    'role_summary': char.get('role_summary'),
                     'url': char.get('url')
                 }
             })
@@ -859,7 +859,7 @@ class EnhancedGenshinProcessor:
                     'chunk_type': 'description',
                     'content': desc_chunk.strip(),
                     'metadata': {
-                        'element': char. get('element'),
+                        'element': char.get('element'),
                         'weapon': char.get('weapon'),
                         'region': char.get('region'),
                         'url': char.get('url')
@@ -906,7 +906,7 @@ class EnhancedGenshinProcessor:
 {section_content}
 """
                     chunks.append({
-                        'id': f"{name. lower().replace(' ', '_')}_{section_name.lower().replace(' ', '_')}",
+                        'id': f"{name.lower().replace(' ', '_')}_{section_name.lower().replace(' ', '_')}",
                         'character':  name,
                         'chunk_type': 'section',
                         'section_name': section_name,
@@ -963,7 +963,7 @@ class EnhancedGenshinProcessor:
             stats['by_weapon'][weapon] = stats['by_weapon'].get(weapon, 0) + 1
 
             # Count by region
-            region = char. get('region', 'Unknown')
+            region = char.get('region', 'Unknown')
             stats['by_region'][region] = stats['by_region'].get(region, 0) + 1
 
             # Count by rarity
@@ -972,7 +972,7 @@ class EnhancedGenshinProcessor:
 
             # Count by role
             role = char.get('role_summary', 'Unknown')
-            stats['by_role'][role] = stats['by_role']. get(role, 0) + 1
+            stats['by_role'][role] = stats['by_role'].get(role, 0) + 1
 
             # Count by character type
             char_type = char.get('character_type', 'Unknown')
@@ -985,7 +985,7 @@ class EnhancedGenshinProcessor:
                 stats['missing_fields']['weapon'] += 1
             if not char.get('region'):
                 stats['missing_fields']['region'] += 1
-            if not char.get('description') or len(char. get('description', '')) < 50:
+            if not char.get('description') or len(char.get('description', '')) < 50:
                 stats['missing_fields']['description'] += 1
             if not char.get('voice_actors'):
                 stats['missing_fields']['voice_actors'] += 1
@@ -1005,7 +1005,7 @@ def main():
     processed_data = processor.process_all("characters_latest.json")
 
     # Save processed data
-    processor. save_data(processed_data, "characters_processed_v3.json")
+    processor.save_data(processed_data, "characters_processed_v3.json")
 
     # Create smart chunks
     chunks = processor.create_smart_chunks(processed_data)
@@ -1028,7 +1028,7 @@ def main():
         print(f"  {rarity}-Star: {count}")
 
     print("\nBy Role:")
-    for role, count in sorted(stats['by_role']. items(), key=lambda x: -x[1])[: 10]:
+    for role, count in sorted(stats['by_role'].items(), key=lambda x: -x[1])[: 10]:
         print(f"  {role}: {count}")
 
     print("\nBy Character Type:")
@@ -1052,8 +1052,8 @@ def main():
 
         print(f"\nCharacter: {sample['name']}")
         print(f"Element: {sample.get('element', 'N/A')}")
-        print(f"Weapon: {sample. get('weapon', 'N/A')}")
-        print(f"Rarity: {sample. get('rarity', 'N/A')}-Star")
+        print(f"Weapon: {sample.get('weapon', 'N/A')}")
+        print(f"Rarity: {sample.get('rarity', 'N/A')}-Star")
         print(f"Region: {sample.get('region', 'N/A')}")
         print(f"Role: {sample.get('role_summary', 'N/A')}")
         print(f"Character Type: {sample.get('character_type', 'N/A')}")

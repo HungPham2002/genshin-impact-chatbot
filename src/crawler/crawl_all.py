@@ -23,7 +23,7 @@ def main():
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
 
-    # Initialize crawler with 1. 5s delay (respectful crawling)
+    # Initialize crawler with 1.5s delay (respectful crawling)
     crawler = GenshinWikiCrawler(delay=1.5, output_dir="data/raw")
 
     # Crawl ALL characters (no limit)
@@ -31,7 +31,7 @@ def main():
     characters = crawler.crawl_characters(max_chars=None)
 
     if not characters:
-        print("❌ No characters crawled!  Exiting.")
+        print("No characters crawled!  Exiting.")
         return
 
     # Save raw data
@@ -45,7 +45,7 @@ def main():
 
     # Summary
     print("\n" + "=" * 60)
-    print("✅ CRAWL COMPLETE!")
+    print("CRAWL COMPLETE!")
     print("=" * 60)
     print(f"Total characters:  {len(characters)}")
     print(f"Saved to: {filepath}")
